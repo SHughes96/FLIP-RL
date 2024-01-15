@@ -41,6 +41,8 @@ def generate_points(coords):
     return np.asarray(targets)
 
 def calc_time(W, v):
+    ##### This calculation isn't correct because it doesn't account for the robot's start position 
+            ### This needs to be redone
     """A vector to calculate the time taken for a move to complete for a given speed
 
     Args:
@@ -69,17 +71,15 @@ class field_gen():
             self.fibre_end_positions = generate_points(self.fibre_positions_origin)
             
             self.full_coords_list = np.hstack([start_coords, self.fibre_end_positions])
-            self.time = calc_time(self.full_coords_list[:, 1:], 1.5)
+            ##### This calculation isn't correct because it doesn't account for the robot's start position 
+            ### This needs to be redone
+            
             return
         
 if __name__ == '__main__':
     
     fg = field_gen()
-    # print('Fibre start coords', fg.fibre_positions_origin)
-    # print('\n')
-    # print('fibre end coords', fg.fibre_end_positions)
-    
-    print(fg.time)
+
 
     
     
