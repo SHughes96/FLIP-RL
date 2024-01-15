@@ -1,0 +1,31 @@
+import numpy as np
+
+
+def calc_fib_coords(N, R=0.1):
+      """A function to generate a sequence of fibre pivot positions that are equally spaced
+
+      Returns:
+          _type_: an array of XY values with a fibre number
+      """
+      assert type(N)==int, 'Number of positions must be an integer'
+      
+      R += 1
+      coordinates = []
+      ids = np.arange(N)
+      for i in range(N):
+        theta = 2 * np.pi * i / N
+        x = R * np.cos(theta)
+        y = R * np.sin(theta)
+        coordinates.append((x, y))
+      
+      
+      return coordinates
+
+
+class field_gen():
+      
+      def __init__()->None:
+            
+            #fibre_positions = 
+            
+            return
