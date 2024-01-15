@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def calc_fib_coords(N, R=0.1):
+def calc_fib_coords(N, R=0.2):
       """A function to generate a sequence of fibre pivot positions that are equally spaced
 
       Returns:
@@ -16,16 +16,42 @@ def calc_fib_coords(N, R=0.1):
         theta = 2 * np.pi * i / N
         x = R * np.cos(theta)
         y = R * np.sin(theta)
-        coordinates.append((x, y))
+        ID = ids[i]
+        coordinates.append((ID, x, y))
       
       
-      return coordinates
+      return np.asarray(coordinates)
+  
+def generate_points(coords):
+    """A function to generate a random point inside the allowed range of movement of a fibre
+
+    Args:
+        coords (array): An array with N, X, Y structure
+    """
+    rand_ang = np.radians(np.random.uniform(-14, 14))
+    rand_rad = np.random.uniform(0, 1)
+    
+    X = coords[1] + rand_rad * np.cos(rand_ang)
+    Y = coords[2] + rand_rad * np.sin(rand_ang)
+    
+    return np.array([X, Y])
 
 
 class field_gen():
       
-      def __init__()->None:
+      def __init__(self):
+          
+            start_coords = calc_fib_coords(15)
             
-            #fibre_positions = 
+            self.fibre_positions_origin = start_coords[:, 1:]
+            self.ids = self.fibre_positions_origin[:, 0].astype(int)
+            self.fibre_end_positions = generate_points(self.fibre_positions_origin)
             
             return
+        
+if __name__ == '__main__':
+    
+    fg = field_gen()
+
+    
+    
