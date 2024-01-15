@@ -40,25 +40,6 @@ def generate_points(coords):
     
     return np.asarray(targets)
 
-def calc_time(W, v):
-    ##### This calculation isn't correct because it doesn't account for the robot's start position 
-            ### This needs to be redone
-    """A vector to calculate the time taken for a move to complete for a given speed
-
-    Args:
-        W (vector): a vector of shape 2(N+1)
-
-    Returns:
-        T : The time in seconds
-    """
-    T = []
-    for index, item in enumerate(W):
-        d = np.sqrt( np.abs(item[0] - item[2])**2 + np.abs(item[1] - item[3])**2 )
-        time = d / v
-        T.append(time)
-        
-    return T
-
 
 class field_gen():
       
@@ -71,8 +52,6 @@ class field_gen():
             self.fibre_end_positions = generate_points(self.fibre_positions_origin)
             
             self.full_coords_list = np.hstack([start_coords, self.fibre_end_positions])
-            ##### This calculation isn't correct because it doesn't account for the robot's start position 
-            ### This needs to be redone
             
             return
         
