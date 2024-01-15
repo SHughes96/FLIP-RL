@@ -26,15 +26,36 @@ def generate_points(coords):
     """A function to generate a random point inside the allowed range of movement of a fibre
 
     Args:
-        coords (array): An array with N, X, Y structure
+        coords (array): An array with an X, Y structure
     """
-    rand_ang = np.radians(np.random.uniform(-14, 14))
-    rand_rad = np.random.uniform(0, 1)
+    targets = []
+    for index, item in enumerate(coords):
+        
+        rand_ang = np.radians(np.random.uniform(-14, 14))
+        rand_rad = np.random.uniform(0, 1)
     
-    X = coords[1] + rand_rad * np.cos(rand_ang)
-    Y = coords[2] + rand_rad * np.sin(rand_ang)
+        X = item[0] + rand_rad * np.cos(rand_ang)
+        Y = item[1] + rand_rad * np.sin(rand_ang)
+        targets.append([X, Y])
     
-    return np.array([X, Y])
+    return np.asarray(targets)
+
+def calc_time(W, v):
+    """A vector to calculate the time taken for a move to complete for a given speed
+
+    Args:
+        W (vector): a vector of shape 2(N+1)
+
+    Returns:
+        T : The time in seconds
+    """
+    T = []
+    for index, item in enumerate(W):
+        d = np.sqrt( np.abs(item[0] - item[2])**2 + np.abs(item[1] - item[3])**2 )
+        time = d / v
+        T.append(time)
+        
+    return T
 
 
 class field_gen():
@@ -47,11 +68,18 @@ class field_gen():
             self.ids = self.fibre_positions_origin[:, 0].astype(int)
             self.fibre_end_positions = generate_points(self.fibre_positions_origin)
             
+            self.full_coords_list = np.hstack([start_coords, self.fibre_end_positions])
+            self.time = calc_time(self.full_coords_list[:, 1:], 1.5)
             return
         
 if __name__ == '__main__':
     
     fg = field_gen()
+    # print('Fibre start coords', fg.fibre_positions_origin)
+    # print('\n')
+    # print('fibre end coords', fg.fibre_end_positions)
+    
+    print(fg.time)
 
     
     
