@@ -53,7 +53,7 @@ class field_gen():
             
             self.full_coords_list = np.hstack([start_coords, self.fibre_end_positions])
             
-            return
+            return self.full_coords_list
         
 if __name__ == '__main__':
     
