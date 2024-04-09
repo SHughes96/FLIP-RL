@@ -6,32 +6,17 @@ from gym.utils import seeding
 import numpy as np
 
 
-
-
 from stable_baselines3.common.env_checker import check_env
+
+
+from field_start import field_gen
 
 #speed of the robot
 SPEED = 0.5
+TOTAL_FIBRES = 30
 
-class SimpleDeltaEnv(gym.Env):
 
-    def __init__(self) -> None:
-        super().__init__()
-        return
-    
-
-    """Custom RL environment following the Gym interface. It is the environment used to choose which fibre a positioner should move.
-
-    Args:
-        gym (class): OpenAI Gym class
-    """
-    
-    
-    def __init__(self) -> None:
-        super(SimpleDeltaEnv, self).__init__()
-        
-        
-    def calculate_time(self, robotVect, fibre_start, fibre_end):
+def calculate_time(robotVect, fibre_start, fibre_end):
         """ 
         A function to calculate the time taken for a move
         inputs
@@ -55,6 +40,46 @@ class SimpleDeltaEnv(gym.Env):
         T = distance/SPEED
         
         return T
+
+
+class SimpleDeltaEnv(gym.Env):
+    """Custom RL environment following the Gym interface. It is the environment used to choose which fibre a positioner should move.
+
+    Args:
+        gym (class): OpenAI Gym class
+    """
+        
+    def __init__(self, num_objects):
+        
+        super(SimpleDeltaEnv, self).__init__()
+        self.num_objects = num_objects
+        self.action_space = spaces.Discrete(num_objects)
+        
+        self.observation_space = spaces.Box(low=0, high=NUM, shape=(N_CHANNELS, HEIGHT, WIDTH), dtype=np.uint8)
+        
+    def step(self, action):
+        
+        return self.observation, self.reward, self.done, self.info
+    
+    def reset(self):
+        self.done = False
+        
+        self.num_objects = TOTAL_FIBRES
+        
+        fg = field_gen()
+        
+        self.W = (0, 0) #For now choosing to have the robot always start at zero zero coords
+        self.fibre_coords = fg.full_coords_list
+        self.num_left = TOTAL_FIBRES
+        
+        self.observation = [self.W, self.fibre_coords, self.num_left] 
+        return self.observation
+    
+    def update_action_space(self, num_objects):
+        ''' A function to dynamically update the current action space during training'''
+        self.num_objects = num_objects
+        self.action_space = spaces.Discrete(num_objects)
+        
         
         
         
