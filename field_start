@@ -43,22 +43,28 @@ def generate_points(coords):
 
 class field_gen():
       
-      def __init__(self):
-          
-            start_coords = calc_fib_coords(15)
+      def __init__(self, total_fibres):
             
+            start_coords = calc_fib_coords(total_fibres)
             self.fibre_positions_origin = start_coords[:, 1:]
             self.ids = self.fibre_positions_origin[:, 0].astype(int)
             self.fibre_end_positions = generate_points(self.fibre_positions_origin)
             
-            self.full_coords_list = np.hstack([start_coords, self.fibre_end_positions])
+            #self.full_coords_list = np.hstack([start_coords, self.fibre_end_positions])
+                       
+            # Generate an array for identity integers
+            identity = np.arange(start_coords.shape[0])
+            
+            self._array = np.zeros(total_fibres, dtype=[('identity', int), ('start_coords', float, (2,)), ('end_coords', float, (2,))])
+            self._array['identity'] = identity
+            self._array['start_coords'] = self.fibre_positions_origin
+            self._array['end_coords'] = self.fibre_end_positions
             
             return
         
 if __name__ == '__main__':
     
-    fg = field_gen()
-    print(fg.full_coords_list)
+    fg = field_gen(5)
 
 
     
