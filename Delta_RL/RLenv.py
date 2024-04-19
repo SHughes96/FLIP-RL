@@ -63,6 +63,7 @@ class SimpleDeltaEnv(gym.Env):
     
     def reset(self):
         self.done = False
+        self.prev_reward = 0
         
         self.num_objects = TOTAL_FIBRES
         
