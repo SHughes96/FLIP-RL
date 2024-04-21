@@ -16,6 +16,7 @@ SPEED = 0.5
 TOTAL_FIBRES = 30
 
 
+
 def calculate_time(robotVect, fibre_start, fibre_end):
         """ 
         A function to calculate the time taken for a move
@@ -49,11 +50,14 @@ class SimpleDeltaEnv(gym.Env):
         gym (class): OpenAI Gym class
     """
         
-    def __init__(self, num_objects):
+    def __init__(self, N_fibres=TOTAL_FIBRES):
         
         super(SimpleDeltaEnv, self).__init__()
-        self.num_objects = num_objects
-        self.action_space = spaces.Discrete(num_objects)
+        self.N_fibres = N_fibres
+        self.action_space = spaces.Discrete(self.N_fibres)
+        
+        self.fg = super._array
+        self.env_vect = None
         
         self.observation_space = spaces.Box(low=0, high=NUM, shape=(N_CHANNELS, HEIGHT, WIDTH), dtype=np.uint8)
         
@@ -63,26 +67,15 @@ class SimpleDeltaEnv(gym.Env):
     
     def reset(self):
         self.done = False
-        self.prev_reward = 0
-        
-        self.num_objects = TOTAL_FIBRES
-        
         fg = field_gen()
         
         self.W = (0, 0) #For now choosing to have the robot always start at zero zero coords
         self.fibre_coords = fg.full_coords_list
-        self.num_left = TOTAL_FIBRES
+        
         
         self.observation = [self.W, self.fibre_coords, self.num_left] 
         return self.observation
-    
-    def update_action_space(self, num_objects):
-        ''' A function to dynamically update the current action space during training'''
-        self.num_objects = num_objects
-        self.action_space = spaces.Discrete(num_objects)
-        
-        
-        
+
         
         
 if __name__ == "__main__":

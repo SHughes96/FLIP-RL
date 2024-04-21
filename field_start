@@ -52,11 +52,13 @@ def generate_points(coords, angle_range_degrees):
     Returns:
         array: An array of generated points.
     """
-    targets = []
+    targets_cartesian = []
+    targets_radial = []
     for item in coords:
         # Extract coordinates and ID
         Rin, theta = item
-        print(Rin, theta)
+        x = Rin*np.cos(theta)
+        y = Rin*np.sin(theta)
 
         # Generate random angle within cone range
         rand_ang = np.radians(np.random.uniform(-angle_range_degrees, angle_range_degrees))
@@ -65,16 +67,18 @@ def generate_points(coords, angle_range_degrees):
         #radius = np.sqrt(x**2 + y**2)
 
         # Generate random radius within cone radius
-        rand_radius = np.random.uniform(0, 1.0)
+        rand_radius = np.random.uniform(0.2, 1.2)
 
         # Calculate coordinates of new point
-        new_x = rand_radius * np.cos(rand_ang + theta)
-        new_y = rand_radius * np.sin(rand_ang + theta)
+        new_x = x  - rand_radius * np.cos(rand_ang + theta)
+        new_y = y - rand_radius * np.sin(rand_ang + theta)
+        
+        new_R = Rin - rand_radius
+        new_theta = rand_ang + theta
 
-        targets.append((new_x, new_y))
-    print('\n')
-    print('targets', targets)
-    return np.asarray(targets)
+        targets_cartesian.append((new_x, new_y))
+        targets_radial.append((new_R, new_theta))
+    return np.asarray(targets_cartesian), np.asarray(targets_radial)
 
 
 
@@ -125,14 +129,15 @@ class field_gen():
         print(self.fibre_positions_origin_radial)
         
         self.ids = self.fibre_positions_origin[:, 0].astype(int)
-        self.fibre_end_positions = generate_points(self.fibre_positions_origin_radial, 14)
+        self.fibre_end_positions, self.fibre_ends_radial = generate_points(self.fibre_positions_origin_radial, 14)
         
         
         # print('start_positions', self.fibre_positions_origin[0:2])
         # print('end_positions', self.fibre_end_positions[0:2])
         #self.full_coords_list = np.hstack([start_coords, self.fibre_end_positions])
          
-        self.flattened_coords = alternate_vectors(self.fibre_positions_origin, self.fibre_end_positions)
+        self.flattened_coords_cartesian = alternate_vectors(self.fibre_positions_origin, self.fibre_end_positions)
+        self.flattened_coords_radial = alternate_vectors(self.fibre_positions_origin_radial, self.fibre_ends_radial)
         #plot_field(np.array([[0,0], [1,0]]), np.array([[1, 1], [1,2]]))
             
             
