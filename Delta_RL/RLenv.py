@@ -1,7 +1,7 @@
-import gymnasium
-from gymnasium import spaces
-from gymnasium import error, spaces, utils
-from gymnasium.utils import seeding
+import gym
+from gym import spaces
+from gym import error, spaces, utils
+from gym.utils import seeding
 
 import numpy as np
 
@@ -58,7 +58,7 @@ def calculate_time(robotVect, fibre_start, fibre_end):
         return T
 
 
-class SimpleDeltaEnv(gymnasium.Env):
+class SimpleDeltaEnv(gym.Env):
     """Custom RL environment following the Gym interface. It is the environment used to choose which fibre a positioner should move.
 
     Args:
@@ -123,6 +123,17 @@ class SimpleDeltaEnv(gymnasium.Env):
         return self.obs, self.info
 
         
-# if __name__ == "__main__":
-#     env = SimpleDeltaEnv()
-#     check_env(env, warn=True)
+if __name__ == "__main__":
+    env = SimpleDeltaEnv()
+    #check_env(env, warn=True)
+    # Test the environment with random actions
+    obs, info = env.reset()
+    print(f"Initial observation: {obs}")
+
+    for step in range(100):  # Take 10 steps as a simple test
+        action = env.action_space.sample()  # Take random action
+        obs, reward, done, _, info = env.step(action)
+        print(f"Step {step+1} - Action: {action}, Reward: {reward}, Done: {done}")
+        if done:
+            print("Episode finished!")
+            break
