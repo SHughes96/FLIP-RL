@@ -1,5 +1,5 @@
-# Delta_RL
-Using Reinforcement learning to improve the WEAVE program Delta
+# FLIP-RL
+Using Reinforcement learning to determine the optimal placement order of fibres in pick-and-place multi-object spectrographs
 
 ## The Problem:
 
